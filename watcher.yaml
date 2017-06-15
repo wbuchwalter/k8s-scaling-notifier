@@ -1,21 +1,21 @@
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
-  name: qdrouterd-watcher
+  name: scaling-notifier
   labels:
-    app: qdrouterd-watcher
+    app: scaling-notifier
 spec:
   replicas: 1
   template:
     metadata:
-      name: qdrouterd-watcher
+      name: scaling-notifier
       labels:
-        name: qdrouterd-watcher
+        name: scaling-notifier
     spec:
       containers:
-        - image: wbuchwalter/qdrouterd-watcher
-          name: qdrouterd-watcher
+        - image: wbuchwalter/k8s-scaling-notifier
+          name: scaling-notifier
           imagePullPolicy: Always
           command:
-            - python3.6
-            - /app/app/main.py
+            - python
+            - /app/main.py
