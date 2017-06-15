@@ -1,12 +1,11 @@
 import pykube
 import os
 import json
-
-api = None
+import requests
 
 class Watcher(object):
-
-    def __init__(self):
+    def __init__(self, hook):
+        self.hook = hook
         self.api = self.get_api()
 
     def get_api(self):
@@ -27,8 +26,10 @@ class Watcher(object):
         for e in watch:
             if e.type == 'ADDED':
                 pool_maps = self.get_pools_map()
-                
-
+                pools = []
+                for pool_name in pool_maps:
+                    pools.append(pool_maps[pool_name])
+                self.notify(pools)
 
     def get_pools_map(self):
         nodes = pykube.Node.objects(self.api)
@@ -57,9 +58,17 @@ class Watcher(object):
             raise ValueError('Kubernetes node name was malformed and cannot be processed.')
         return name_parts[1]
 
+    def notify(self, agent_pools):
+        try:
+            resp = requests.post(self.hook, json={
+                "text": json.dumps(agent_pools)
+            })
+        except requests.exceptions.ConnectionError as e:
+            print('ERROR: Failed to notify: %s', e)
+
 
 def main():
-    watcher = Watcher()
+    watcher = Watcher('https://hooks.slack.com/services/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')
     watcher.watch()
 
 if __name__ == '__main__':
