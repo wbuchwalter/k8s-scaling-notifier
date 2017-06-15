@@ -1,0 +1,6 @@
+# for working with IP address
+ipaddress>=1.0.17
+pykube
+python-dateutil>=2.5.3
+cachetools>=2.0.0
+PyYAML>=3.11

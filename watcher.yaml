@@ -1,0 +1,21 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: qdrouterd-watcher
+  labels:
+    app: qdrouterd-watcher
+spec:
+  replicas: 1
+  template:
+    metadata:
+      name: qdrouterd-watcher
+      labels:
+        name: qdrouterd-watcher
+    spec:
+      containers:
+        - image: wbuchwalter/qdrouterd-watcher
+          name: qdrouterd-watcher
+          imagePullPolicy: Always
+          command:
+            - python3.6
+            - /app/app/main.py
